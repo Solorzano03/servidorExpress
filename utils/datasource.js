@@ -8,6 +8,6 @@ const AppDataSource = new DataSource({
   ssl: true,
   logging:true,
   synchronize: true,
-  entities: [require ('../Entity/users'), require ('../Entity/juegos'), require('../Entity/niveles'), require('../Entity/coleccionusuarios'), require('../Entity/tarjetas')],
+  entities: [require ('../Entity/users'), require ('../Entity/juegos'), require('../Entity/niveles'), require('../Entity/coleccionusuarios'), require('../Entity/tarjetas'), require ('../Entity/Progresojuego')],
 });
 module.exports = { AppDataSource };
