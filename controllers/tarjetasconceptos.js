@@ -1,7 +1,25 @@
 const { AppDataSource } = require('../utils/datasource');
-const { tarjetas } = require('../Entity/tarjetas');
+const  tarjetas  = require('../Entity/tarjetas');
 
 const repository = AppDataSource.getRepository(tarjetas);
+
+const createtarjetas = async (req, res) => {
+  try {
+    const newtarjeta = await repository.create(req.body)
+    const tarjet = await repository.save(newtarjeta)
+    
+    return res.status(201).json({ status: 'ok', data: tarjet })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      status: 'fail',
+      errors: {
+        message: 'Ha ocurrido un error interno en el servidor'
+      }
+    })
+  }
+
+}
 
 const getColecciontar = async (_req, res) => {
   try {
@@ -21,8 +39,8 @@ const getColecciontar = async (_req, res) => {
 
 const getcolecciontar = async (req, res) => {
   try {
-    const data = await repository.findOneBy({ id: parseInt(req.params.id) });
-    if (data === null) return res.status(404).json({ message: 'No se pudo encontrar el estado' });
+    const data = await repository.findOneBy({ id_tarjetas: parseInt(req.params.id) });
+    if (data === null) return res.status(404).json({ message: 'No se pudo encontrar la coleccion' });
 
     const tarje = data.toJSONCRE();
     return res.status(302).json({ status: 'ok', data: tarje });
@@ -38,15 +56,15 @@ const getcolecciontar = async (req, res) => {
 };
 
 const updateColecciontar = async (req, res) => {
-  const data = await repository.findOneBy({ id: parseInt(req.params.id) });
-  if (data === null) return res.status(404).json({ message: 'No se pudo encontrar el estado' });
+  const data = await repository.findOneBy({ id_tarjetas: parseInt(req.params.id) });
+  if (data === null) return res.status(404).json({ message: 'No se pudo encontrar la coleccion' });
 
   try {
     const saveColecciontar = repository.merge(data, req.body);
     const dataColecciontar = await repository.save(saveColecciontar);
-    const tarje = dataColecciontar.toJSONUP();
+   
 
-    return res.status(302).json({ status: 'ok', data: tarje });
+    return res.status(302).json({ status: 'ok', data: dataColecciontar });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -60,11 +78,11 @@ const updateColecciontar = async (req, res) => {
 
 const deletecolecciontar = async (req, res) => {
   try {
-    const data = await repository.delete({ id: parseInt(req.params.id) });
+    const data = await repository.delete({  id_tarjetas: parseInt(req.params.id) });
 
-    if (data.affected === 1) return res.status(200).json({ message: 'El usuario se eliminó con exito' });
+    if (data.affected === 1) return res.status(200).json({ message: 'La coleccion se elimino correctamente' });
 
-    return res.status(404).json({ message: 'El usuario que intenta eliminar no existe' });
+    return res.status(404).json({ message: 'La coleccion que intenta eliminar no existe' });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -77,6 +95,7 @@ const deletecolecciontar = async (req, res) => {
 };
 
 module.exports = {
+  createtarjetas,
   getColecciontar,
   getcolecciontar,
   updateColecciontar,

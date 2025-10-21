@@ -26,19 +26,29 @@ module.exports = new EntitySchema({
             type: "varchar",
             length: 100,
         },
+         numero_aciertos: {
+            name: "Numero_Aciertos", // Nombre real en la BD (mantiene compatibilidad)
+            type: "real",
+            nullable: false,
+        },
+         total_preguntas: {
+            name: "total_Preguntas",
+            type: "int",
+            nullable: false,
+        },
+         puntaje: {
+            type: "int",
+            nullable: false,
+        },
+        
+        
     },
     relations: {
-        nivel: {
-            target: "niveles",
+        usuario: {
+            target: "Users",
             type: "many-to-one",
-            joinColumn: { name: "id_nivel" },
+            joinColumn: { name: "id_usuarios" },
             onDelete: "CASCADE",
         },
-        progreso: {
-            target: "Progresojuego",
-            type: "one-to-many",
-            inverseSide: "juegos",
-            cascade: true,
-        },
     },
-})
+});

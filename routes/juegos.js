@@ -1,17 +1,18 @@
 /* eslint-disable no-unused-vars */
 const { Router } = require('express');
-const { deleteJuegos, getjuego, getJuegos, updateJuegos } = require ('../controllers/juegos');
-const { auth } = require('../middleware/verifyToken');
+const { deleteJuegos, getjuego, getJuegos, updateJuegos, createjuego } = require ('../controllers/Juegos');
+
 
 const juegosRouter = Router();
 
 juegosRouter.get('/', getJuegos);
 
 // userRouter.post('/', validate(registerSchema), createUser);
+juegosRouter.post('/',createjuego )
 
-juegosRouter.get('/:id', auth, getjuego);
+juegosRouter.get('/:id', getjuego);
 
-juegosRouter.put('/:id', auth, updateJuegos);
+juegosRouter.put('/:id', updateJuegos);
 
 juegosRouter.delete('/:id', deleteJuegos);
 

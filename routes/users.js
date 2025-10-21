@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 const { Router } = require('express');
-const { deleteUser, getUser, getUsers, updateUser } = require('../controllers/Users');
-const { auth } = require('../middleware/verifyToken');
+const { deleteUser, getUser, getUsers, updateUser, createUser} = require('../controllers/Users');
+
 
 const userRouter = Router();
 
@@ -9,9 +9,11 @@ userRouter.get('/', getUsers);
 
 // userRouter.post('/', validate(registerSchema), createUser);
 
-userRouter.get('/:id', auth, getUser);
+userRouter.get('/:id', getUser);
 
-userRouter.put('/:id', auth, updateUser);
+userRouter.post('/', createUser);
+
+userRouter.put('/:id',  updateUser);
 
 userRouter.delete('/:id', deleteUser);
 

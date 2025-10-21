@@ -1,8 +1,27 @@
 const { AppDataSource } = require('../utils/datasource');
-const { Juegos }= require ('../Entity/juegos')
+const  Juegos = require ('../Entity/juegos')
 
 
 const repository = AppDataSource.getRepository(Juegos);
+
+const createjuego = async (req, res) => {
+  try {
+    const {id_usuarios, ...data} = req.body
+    const newjuego = await repository.create({id_usuarios, ...data})
+    const games = await repository.save(newjuego)
+    
+    return res.status(201).json({ status: 'ok', data: games})
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      status: 'fail',
+      errors: {
+        message: 'Ha ocurrido un error interno en el servidor'
+      }
+    })
+  }
+
+}
 
 const getJuegos = async (_req, res) => {
   try {
@@ -22,7 +41,7 @@ const getJuegos = async (_req, res) => {
 
 const getjuego= async (req, res) => {
   try {
-    const data = await repository.findOneBy({ id: parseInt(req.params.id) });
+    const data = await repository.findOneBy({ id_juegos: parseInt(req.params.id) });
     if (data === null) return res.status(404).json({ message: 'No se pudo encontrar el estado' });
 
     const juego = data.toJSONCRE();
@@ -39,15 +58,15 @@ const getjuego= async (req, res) => {
 };
 
 const updateJuegos = async (req, res) => {
-  const data = await repository.findOneBy({ id: parseInt(req.params.id) });
+  const data = await repository.findOneBy({ id_juegos: parseInt(req.params.id) });
   if (data === null) return res.status(404).json({ message: 'No se pudo encontrar el estado' });
 
   try {
     const saveJuegos = repository.merge(data, req.body);
     const dataJuegos = await repository.save(saveJuegos);
-    const juego = dataJuegos.toJSONUP();
+    c
 
-    return res.status(302).json({ status: 'ok', data: juego });
+    return res.status(302).json({ status: 'ok', data: dataJuegos });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -61,11 +80,11 @@ const updateJuegos = async (req, res) => {
 
 const deleteJuegos = async (req, res) => {
   try {
-    const data = await repository.delete({ id: parseInt(req.params.id) });
+    const data = await repository.delete({ id_juegos: parseInt(req.params.id) });
 
-    if (data.affected === 1) return res.status(200).json({ message: 'El usuario se eliminó con exito' });
+    if (data.affected === 1) return res.status(200).json({ message: 'El juego se eliminó con exito' });
 
-    return res.status(404).json({ message: 'El usuario que intenta eliminar no existe' });
+    return res.status(404).json({ message: 'El juego que intenta eliminar no existe' });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -78,6 +97,7 @@ const deleteJuegos = async (req, res) => {
 };
 
 module.exports = {
+  createjuego,
   getJuegos,
   getjuego,
   updateJuegos,

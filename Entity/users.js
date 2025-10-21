@@ -33,17 +33,17 @@ module.exports = new EntitySchema({
     },
   },
   relations: {
-    Progresojuego: {
-      target: "Progresojuego",
+    juegos: {
+      target: "games",
       type: "one-to-many",
-      inverseSide: "users",
+      inverseSide: "usuario",
       cascade: true,
     },
     coleccionusuarios: {
-            target: "coleccion",
-            type: "one-to-many",
-            inverseSide: "users",
-            cascade: true,
-        },
+      target: "coleccion",
+      type: "one-to-many",
+      inverseSide: "usuario",
+      cascade: true,
+    },
   },
-})
+});

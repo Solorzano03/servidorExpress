@@ -24,12 +24,4 @@ module.exports = new EntitySchema({
         },
 
     },
-    relations: {
-        coleccion: {
-            target: "coleccion",
-            type: "one-to-many",
-            inverseSide: "tarjeta",
-            cascade: true,
-        },
-    },
-})
+});
