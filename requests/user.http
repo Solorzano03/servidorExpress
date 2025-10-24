@@ -1,0 +1,34 @@
+@localHost = http://localhost:3000
+
+# POST {{localHost}}/api/user HTTP/1.1
+# content-type: application/json
+
+# {
+#   "email": "arced12@example.com",
+#   "password": "cedeno02",
+#   "name": "Diego",
+#   "lastname": "Cedeño"
+# }
+
+# GET {{localHost}}/api/user
+
+# GET {{localHost}}/api/user/4
+
+
+# PATCH {{localHost}}/api/user/2 HTTP/1.1
+# content-type: application/json 
+
+# {
+#  "password": "steven122"
+# }
+
+
+## LOGIN
+
+POST {{localHost}}/api/auth/sign-in HTTP/1.1
+content-type: application/json
+
+{
+  "email": "arced12@example.com",
+  "password": "cedeno02"
+}
