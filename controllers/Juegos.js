@@ -6,11 +6,11 @@ const repository = AppDataSource.getRepository(Juegos);
 
 const createjuego = async (req, res) => {
   try {
-    const {id_usuarios, ...data} = req.body
-    const newjuego = await repository.create({id_usuarios, ...data})
+    const { usuarioId, ...data } = req.body
+    const newjuego = await repository.create({ usuario: { id_usuarios: usuarioId }, ...data })
     const games = await repository.save(newjuego)
-    
-    return res.status(201).json({ status: 'ok', data: games})
+
+    return res.status(201).json({ status: 'ok', data: games })
   } catch (error) {
     console.log(error)
     return res.status(500).json({
@@ -23,11 +23,17 @@ const createjuego = async (req, res) => {
 
 }
 
-const getJuegos = async (_req, res) => {
+const getJuegos = async (req, res) => {
   try {
-    const dataJuegos  = await repository.find();
-    const juegos = dataJuegos.map(juego => juego.toJSON());
-    return res.status(200).json({ status: 'ok', data: juegos  });
+    const user = req.query.user;
+    let games;
+    if (user) {
+      games = await repository.find({ where: { usuario: { id_usuarios: parseInt(user) } } });
+    } else {
+      games = await repository.find();
+    }
+
+    return res.status(200).json({ status: 'ok', data: games });
   } catch (er) {
     console.log(er);
     return res.status(500).json({
@@ -58,13 +64,17 @@ const getjuego= async (req, res) => {
 };
 
 const updateJuegos = async (req, res) => {
-  const data = await repository.findOneBy({ id_juegos: parseInt(req.params.id) });
-  if (data === null) return res.status(404).json({ message: 'No se pudo encontrar el estado' });
+  const game = await repository.findOneBy({ id_juegos: parseInt(req.params.id) });
+  if (game === null) return res.status(404).json({ message: 'No se pudo encontrar el estado' });
 
   try {
-    const saveJuegos = repository.merge(data, req.body);
+    const { usuarioId, ...data } = req.body;
+
+    const saveJuegos = repository.merge(game, {
+      usuario: { id_usuarios: usuarioId },
+      ...data
+    });
     const dataJuegos = await repository.save(saveJuegos);
-    c
 
     return res.status(302).json({ status: 'ok', data: dataJuegos });
   } catch (error) {

@@ -1,0 +1,27 @@
+@localHost = http://localhost:3000
+
+# Consultar todos los juegos
+# GET {{localHost}}/api/games
+
+# Consultar todos los juegos de un usuario
+GET {{localHost}}/api/games?user=4
+
+# POST {{localHost}}/api/games HTTP/1.1
+# content-type: application/json
+
+# {
+#   "titulo": "Estilador Profesional de Caballeros",
+#   "descripcion": "una aventura muy exitosa de un gran caballero impredecible",
+#   "tipo": "easy",
+#   "numero_aciertos": 10,
+#   "total_preguntas": 20,
+#   "puntaje": 50,
+#   "usuarioId": 4
+# }
+
+PATCH {{localHost}}/api/games/10 HTTP/1.1
+content-type: application/json
+
+{
+  "usuarioId": 3
+}

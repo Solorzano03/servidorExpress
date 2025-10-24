@@ -12,7 +12,7 @@ juegosRouter.post('/',createjuego )
 
 juegosRouter.get('/:id', getjuego);
 
-juegosRouter.put('/:id', updateJuegos);
+juegosRouter.patch('/:id', updateJuegos);
 
 juegosRouter.delete('/:id', deleteJuegos);
 
