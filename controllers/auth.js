@@ -9,12 +9,12 @@ const signIn = async (req, res) => {
 
     const user = await repository.findOneBy({ email });
     if (!user) {
-      return res.status(401).json({ status: 'fail', message: 'Credenciales inválidas' });
+      return res.status(401).json({ status: 'fail', message: 'El usuario no fue encontrado', path: 'email' });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ status: 'fail', message: 'Credenciales inválidas' });
+      return res.status(401).json({ status: 'fail', message: 'La contraseña es incorrecta', path: 'password' });
     }
 
     const { password: ps, ...rest } = user;
