@@ -9,6 +9,15 @@ const createUser = async (req, res) => {
   try {
     const { password, ...rest } = req.body
 
+    const userExist = await repository.findOneBy({ email: rest.email })
+    if (userExist) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'El correo electrónico ya está en uso',
+        path: 'email'
+      })
+    }
+
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)
 
