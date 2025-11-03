@@ -24,7 +24,7 @@ const createtarjetas = async (req, res) => {
 const getColecciontar = async (_req, res) => {
   try {
     const dataColecciontar = await repository.find();
-    const tarjetas = dataColecciontar.map(tarje => tarje.toJSON());
+    
     return res.status(200).json({ status: 'ok', data: tarjetas });
   } catch (er) {
     console.log(er);

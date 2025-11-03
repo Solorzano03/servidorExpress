@@ -25,7 +25,7 @@ const createcoleccion = async (req, res) => {
 const getColeccion = async (_req, res) => {
   try {
     const dataColeccion = await repository.find();
-    const coleccion = dataColeccion.map(tarj => tarj.toJSON());
+    
     return res.status(200).json({ status: 'ok', data: coleccion });
   } catch (er) {
     console.log(er);
