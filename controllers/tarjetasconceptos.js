@@ -25,7 +25,7 @@ const getColecciontar = async (_req, res) => {
   try {
     const dataColecciontar = await repository.find();
     
-    return res.status(200).json({ status: 'ok', data: tarjetas });
+    return res.status(200).json({ status: 'ok', data: dataColecciontar });
   } catch (er) {
     console.log(er);
     return res.status(500).json({
