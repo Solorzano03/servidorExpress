@@ -17,9 +17,10 @@ const signIn = async (req, res) => {
       return res.status(401).json({ status: 'fail', message: 'La contraseña es incorrecta', path: 'password' });
     }
 
-    const { password: ps, ...rest } = user;
+    const { password: ps, name, lastname, ...rest } = user;
+    const fullName = `${name.split(' ')[0]} ${lastname.split(' ')[0]}`;
 
-    return res.status(200).json({ status: 'ok', message: 'Inicio de sesión exitoso', user: rest });
+    return res.status(200).json({ status: 'ok', message: 'Inicio de sesión exitoso', user: {...rest, name: fullName} });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
