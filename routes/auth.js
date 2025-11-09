@@ -8,6 +8,6 @@ const authRouter = Router();
 
 authRouter.post('/sign-in', signIn);
 authRouter.post('/sign-up', createUser);
-authRouter.post('/change-password', changePassword);
+authRouter.post('/change-password/:id', changePassword);
 
 module.exports = authRouter;
