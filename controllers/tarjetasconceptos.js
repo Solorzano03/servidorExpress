@@ -42,8 +42,7 @@ const getcolecciontar = async (req, res) => {
     const data = await repository.findOneBy({ id_tarjetas: parseInt(req.params.id) });
     if (data === null) return res.status(404).json({ message: 'No se pudo encontrar la coleccion' });
 
-    const tarje = data.toJSONCRE();
-    return res.status(200).json({ status: 'ok', data: tarje });
+    return res.status(200).json({ status: 'ok', data });
   } catch (er) {
     console.log(er);
     return res.status(500).json({
