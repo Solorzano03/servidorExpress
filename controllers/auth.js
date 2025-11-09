@@ -39,7 +39,7 @@ const changePassword = async (req, res) => {
 
   const { password, newPassword } = req.body;
 
-  const isPasswordValid = await bcrypt.compare(password, user.password);
+  const isPasswordValid = await bcrypt.compare(password, data.password);
   if (!isPasswordValid) {
     return res.status(401).json({ status: 'fail', message: 'La contraseña es incorrecta', path: 'password' });
   }
