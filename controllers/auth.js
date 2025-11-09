@@ -32,7 +32,6 @@ const signIn = async (req, res) => {
   }
 }
 
-
 const changePassword = async (req, res) => {
   const user = await repository.findOneBy({ id_usuarios: parseInt(req.params.id) });
   if (!user) {
@@ -50,7 +49,9 @@ const changePassword = async (req, res) => {
   const hashedPassword = await bcrypt.hash(newPassword, salt)
 
   try {
-    const saveUser = repository.merge(data, {
+    const saveUser = repository.update({
+      id_usuarios: parseInt(req.params.id)
+    }, {
       password: hashedPassword
     });
     await repository.save(saveUser);
@@ -65,7 +66,7 @@ const changePassword = async (req, res) => {
       }
     });
   }
-};
+}
 
 module.exports = {
   signIn,
