@@ -34,12 +34,14 @@ const signIn = async (req, res) => {
 
 
 const changePassword = async (req, res) => {
-  const data = await repository.findOneBy({ id_usuarios: parseInt(req.params.id) });
-  if (data === null) return res.status(404).json({ message: 'No se pudo encontrar el estado' });
+  const user = await repository.findOneBy({ id_usuarios: parseInt(req.params.id) });
+  if (!user) {
+    return res.status(401).json({ status: 'fail', message: 'El usuario no fue encontrado', path: 'email' });
+  }
 
   const { password, newPassword } = req.body;
 
-  const isPasswordValid = await bcrypt.compare(password, data.password);
+  const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
     return res.status(401).json({ status: 'fail', message: 'La contraseña es incorrecta', path: 'password' });
   }
