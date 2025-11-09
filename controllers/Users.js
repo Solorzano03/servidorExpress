@@ -60,7 +60,7 @@ const getUser = async (req, res) => {
 
     const { password, ...rest } = data;
 
-    return res.status(302).json({ status: 'ok', data: rest });
+    return res.status(200).json({ status: 'ok', data: rest });
   } catch (er) {
     console.log(er);
     return res.status(500).json({
@@ -88,7 +88,7 @@ const updateUser = async (req, res) => {
     const dataUser = await repository.save(saveUser);
     
 
-    return res.status(302).json({ status: 'ok', data: dataUser });
+    return res.status(200).json({ status: 'ok', data: dataUser });
   } catch (error) {
     console.log(error);
     return res.status(500).json({

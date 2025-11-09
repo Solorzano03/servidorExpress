@@ -43,7 +43,7 @@ const getcolecciontar = async (req, res) => {
     if (data === null) return res.status(404).json({ message: 'No se pudo encontrar la coleccion' });
 
     const tarje = data.toJSONCRE();
-    return res.status(302).json({ status: 'ok', data: tarje });
+    return res.status(200).json({ status: 'ok', data: tarje });
   } catch (er) {
     console.log(er);
     return res.status(500).json({
@@ -64,7 +64,7 @@ const updateColecciontar = async (req, res) => {
     const dataColecciontar = await repository.save(saveColecciontar);
    
 
-    return res.status(302).json({ status: 'ok', data: dataColecciontar });
+    return res.status(200).json({ status: 'ok', data: dataColecciontar });
   } catch (error) {
     console.log(error);
     return res.status(500).json({

@@ -51,7 +51,7 @@ const getjuego= async (req, res) => {
     if (data === null) return res.status(404).json({ message: 'No se pudo encontrar el estado' });
 
     const juego = data.toJSONCRE();
-    return res.status(302).json({ status: 'ok', data: juego });
+    return res.status(200).json({ status: 'ok', data: juego });
   } catch (er) {
     console.log(er);
     return res.status(500).json({
@@ -76,7 +76,7 @@ const updateJuegos = async (req, res) => {
     });
     const dataJuegos = await repository.save(saveJuegos);
 
-    return res.status(302).json({ status: 'ok', data: dataJuegos });
+    return res.status(200).json({ status: 'ok', data: dataJuegos });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
