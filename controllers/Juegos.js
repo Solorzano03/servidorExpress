@@ -5,22 +5,54 @@ const repository = AppDataSource.getRepository(Juegos);
 
 const createjuego = async (req, res) => {
   try {
-    const { usuarioId, ...data } = req.body
-    const newjuego = await repository.create({ usuario: { id_usuarios: usuarioId }, ...data })
-    const games = await repository.save(newjuego)
+    const { usuarioId, titulo, tipo, ...data } = req.body;
 
-    return res.status(201).json({ status: 'ok', data: games })
+    const existing = await repository.findOne({
+      where: {
+        usuario: { id_usuarios: usuarioId },
+        titulo: titulo,
+        tipo: tipo
+      },
+      relations: ["usuario"],
+    });
+
+    let game;
+
+    if (existing) {
+      Object.assign(existing, data);
+      game = await repository.save(existing);
+
+      return res.status(200).json({
+        status: "ok",
+        message: "Juego actualizado correctamente",
+        data: game,
+      });
+
+    } else {
+      // --- No existe: creamos uno nuevo ---
+      const newGame = repository.create({
+        usuario: { id_usuarios: usuarioId },
+        titulo,
+        tipo,
+        ...data,
+      });
+
+      game = await repository.save(newGame);
+
+      return res.status(201).json({
+        status: "ok",
+        message: "Juego creado correctamente",
+        data: game,
+      });
+    }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).json({
-      status: 'fail',
-      errors: {
-        message: 'Ha ocurrido un error interno en el servidor'
-      }
-    })
+      status: "fail",
+      errors: { message: "Ha ocurrido un error interno en el servidor" }
+    });
   }
-
-}
+};
 
 const getJuegos = async (req, res) => {
   try {
