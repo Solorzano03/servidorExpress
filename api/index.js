@@ -1,30 +1,37 @@
+require("dotenv").config();
 const express = require("express");
-const DataSource = require("./utils/datasource");
 const app = express();
-const port = 3000;
+const DataSource = require("../utils/datasource");
 
 app.use(express.json());
 
-const usuarios = require("./routes/users");
-const tarjetas = require("./routes/tarjetas");
-
-const juegos = require("./routes/juegos");
-const coleccionuser = require("./routes/coleccionusuarios");
-
+// Rutas
 app.get("/", (req, res) => {
   res.send("hola mundo");
 });
 
-app.use("/api/auth", require("./routes/auth"));
-app.use("/api/user", usuarios);
-app.use("/api/cards", tarjetas);
-app.use("/api/games", juegos);
-app.use("/api/coleccion", coleccionuser);
+app.use("/api/auth", require("../routes/auth"));
+app.use("/api/user", require("../routes/users"));
+app.use("/api/cards", require("../routes/tarjetas"));
+app.use("/api/games", require("../routes/juegos"));
+app.use("/api/coleccion", require("../routes/coleccionusuarios"));
 
-if (process.env.NODE_ENV !== "production") {
-  app.listen(3000, () => console.log("Servidor local en 3000"));
+// Inicializar BD SOLO UNA VEZ
+let dbInitialized = false;
+
+async function initDB() {
+  if (dbInitialized) return;
+  try {
+    await DataSource.AppDataSource.initialize();
+    console.log("Base de datos conectada");
+    dbInitialized = true;
+  } catch (err) {
+    console.error("Error al conectar BD:", err);
+  }
 }
 
-DataSource.AppDataSource.initialize().then(() =>
-  console.log("base de datos conectada")
-);
+// Handler serverless para Vercel
+module.exports = async (req, res) => {
+  await initDB();   // 👈 aseguramos la conexión aquí
+  return app(req, res);
+};
