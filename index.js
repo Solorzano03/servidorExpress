@@ -2,6 +2,9 @@ const express = require("express");
 const DataSource = require("./utils/datasource");
 const app = express();
 const port = 3000;
+
+app.use(express.json());
+
 const usuarios = require("./routes/users");
 const tarjetas = require("./routes/tarjetas");
 
@@ -12,7 +15,6 @@ app.get("/", (req, res) => {
   res.send("hola mundo");
 });
 
-app.use(express.json());
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/user", usuarios);
 app.use("/api/cards", tarjetas);

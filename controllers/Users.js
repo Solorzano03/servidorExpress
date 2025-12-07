@@ -9,6 +9,15 @@ const createUser = async (req, res) => {
   try {
     const { password, ...rest } = req.body
 
+    const userExist = await repository.findOneBy({ email: rest.email })
+    if (userExist) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'El correo electrónico ya está en uso',
+        path: 'email'
+      })
+    }
+
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)
 
@@ -51,7 +60,7 @@ const getUser = async (req, res) => {
 
     const { password, ...rest } = data;
 
-    return res.status(302).json({ status: 'ok', data: rest });
+    return res.status(200).json({ status: 'ok', data: rest });
   } catch (er) {
     console.log(er);
     return res.status(500).json({
@@ -79,7 +88,7 @@ const updateUser = async (req, res) => {
     const dataUser = await repository.save(saveUser);
     
 
-    return res.status(302).json({ status: 'ok', data: dataUser });
+    return res.status(200).json({ status: 'ok', data: dataUser });
   } catch (error) {
     console.log(error);
     return res.status(500).json({

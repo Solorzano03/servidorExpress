@@ -26,7 +26,7 @@ const getColeccion = async (_req, res) => {
   try {
     const dataColeccion = await repository.find();
     
-    return res.status(200).json({ status: 'ok', data: coleccion });
+    return res.status(200).json({ status: 'ok', data: dataColeccion });
   } catch (er) {
     console.log(er);
     return res.status(500).json({
@@ -43,8 +43,7 @@ const getcoleccion = async (req, res) => {
     const data = await repository.findOneBy({ id_coleccion: parseInt(req.params.id) });
     if (data === null) return res.status(404).json({ message: 'No se pudo encontrar el estado' });
 
-    const tarj = data.toJSONCRE();
-    return res.status(302).json({ status: 'ok', data: tarj });
+    return res.status(200).json({ status: 'ok', data });
   } catch (er) {
     console.log(er);
     return res.status(500).json({
@@ -65,7 +64,7 @@ const updateColeccion = async (req, res) => {
     const dataColeccion = await repository.save(saveColeccion);
    
 
-    return res.status(302).json({ status: 'ok', data: dataColeccion });
+    return res.status(200).json({ status: 'ok', data: dataColeccion });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
