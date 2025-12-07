@@ -7,6 +7,7 @@ const userRouter = Router();
 userRouter.get('/', getUsers);
 
 // userRouter.post('/', validate(registerSchema), createUser);
+userRouter.post('/', createUser);
 
 userRouter.get('/:id', getUser);
 
