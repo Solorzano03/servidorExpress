@@ -13,7 +13,14 @@ app.get("/", (req, res) => {
 app.use("/api/auth", require("../routes/auth"));
 app.use("/api/user", require("../routes/users"));
 app.use("/api/cards", require("../routes/tarjetas"));
-app.use("/api/games", require("../routes/juegos"));
+try {
+  const juegos = require("../routes/juegos");
+  console.log("RUTA CARGADA OK");
+  app.use("/api/games", juegos);  
+} catch (err) {
+  console.error("ERROR AL CARGAR RUTA /games:", err);
+}
+
 app.use("/api/coleccion", require("../routes/coleccionusuarios"));
 
 // Inicializar BD SOLO UNA VEZ
