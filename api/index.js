@@ -21,9 +21,10 @@ app.use("/api/cards", tarjetas);
 app.use("/api/games", juegos);
 app.use("/api/coleccion", coleccionuser);
 
-app.listen(port, () => {
-  console.log(`Server on Port http:localhost:${port}`);
-});
+if (process.env.NODE_ENV !== "production") {
+  app.listen(3000, () => console.log("Servidor local en 3000"));
+}
+
 DataSource.AppDataSource.initialize().then(() =>
   console.log("base de datos conectada")
 );
