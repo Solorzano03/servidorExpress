@@ -69,7 +69,7 @@ const getJuegos = async (req, res) => {
     }
 
     if (search) {
-      whereClause.titulo = ILike(`${search}%`); 
+      whereClause.titulo = ILike(`%${search}%`); 
     }
 
     const games = await repository.find({ where: whereClause });
