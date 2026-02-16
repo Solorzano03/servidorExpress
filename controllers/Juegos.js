@@ -1,4 +1,5 @@
 const { AppDataSource } = require('../utils/datasource');
+const { ILike } = require('typeorm');
 const  Juegos = require ('../Entity/juegos')
 
 const repository = AppDataSource.getRepository(Juegos);
@@ -56,22 +57,25 @@ const createjuego = async (req, res) => {
 
 const getJuegos = async (req, res) => {
   try {
-    const user = req.query.user;
-    let games;
+    const { user, type } = req.query;
+    let whereClause = {};
+
     if (user) {
-      games = await repository.find({ where: { usuario: { id_usuarios: parseInt(user) } } });
-    } else {
-      games = await repository.find();
+      whereClause.usuario = { id_usuarios: parseInt(user) };
     }
+
+    if (type) {
+      whereClause.tipo = ILike(`${type}%`); 
+    }
+
+    const games = await repository.find({ where: whereClause });
 
     return res.status(200).json({ status: 'ok', data: games });
   } catch (er) {
-    console.log(er);
+    console.error(er);
     return res.status(500).json({
       status: 'fail',
-      errors: {
-        message: 'Ha ocurrido un error interno en el servidor'
-      }
+      errors: { message: 'Ha ocurrido un error interno en el servidor' }
     });
   }
 };
