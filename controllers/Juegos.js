@@ -57,7 +57,7 @@ const createjuego = async (req, res) => {
 
 const getJuegos = async (req, res) => {
   try {
-    const { user, type } = req.query;
+    const { user, type, search } = req.query;
     let whereClause = {};
 
     if (user) {
@@ -66,6 +66,10 @@ const getJuegos = async (req, res) => {
 
     if (type) {
       whereClause.tipo = ILike(`${type}%`); 
+    }
+
+    if (search) {
+      whereClause.titulo = ILike(`${search}%`); 
     }
 
     const games = await repository.find({ where: whereClause });
