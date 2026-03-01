@@ -1,8 +1,11 @@
 const { AppDataSource } = require('../utils/datasource');
 const { ILike } = require('typeorm');
 const Tarjetas = require('../Entity/tarjetas');
+const  Juegos = require ('../Entity/juegos')
 
 const repository = AppDataSource.getRepository(Tarjetas);
+
+const juegoRepository = AppDataSource.getRepository(Juegos);
 
 const createtarjetas = async (req, res) => {
   try {
