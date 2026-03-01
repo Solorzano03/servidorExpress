@@ -5,6 +5,9 @@ const DataSource = require("../utils/datasource");
 
 app.use(express.json());
 
+// Servir archivos estáticos desde la carpeta public
+app.use(express.static("public"));
+
 // Rutas
 app.get("/", (req, res) => {
   res.send("api-warp");
