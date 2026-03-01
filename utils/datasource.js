@@ -6,13 +6,13 @@ const AppDataSource = new DataSource({
   type: 'postgres',
   url: process.env.DATABASE_URL,
   ssl: true,
-  logging: false,
-  synchronize: false,
+  logging: true,
+  synchronize: true,
   entities: [
     require('../Entity/users'),
     require('../Entity/juegos'),
     require('../Entity/tarjetas'),
     ],
-  //dropSchema: true, para eliminar esquema total cuando realice cambios en la api 
+  dropSchema: true, //para eliminar esquema total cuando realice cambios en la api 
 });
 module.exports = { AppDataSource };
