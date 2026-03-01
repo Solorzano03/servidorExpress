@@ -1,7 +1,7 @@
 const { AppDataSource } = require('../utils/datasource');
 const { ILike } = require('typeorm');
 const Tarjetas = require('../Entity/tarjetas');
-const  Juegos = require ('../Entity/juegos')
+const Juegos = require('../Entity/juegos')
 
 const repository = AppDataSource.getRepository(Tarjetas);
 
@@ -73,7 +73,23 @@ const createtarjetas = async (req, res) => {
 
 const getColecciontar = async (req, res) => { // Asegúrate de usar 'req' (no '_req') si vas a usar req.query
   try {
-    const { user, type } = req.query;
+    const { user, type, game } = req.query;
+   
+    if (game) {
+      const dataColecciontar = await repository.find({
+        where: {
+          juego: {
+            id_juegos: game
+          },
+        }
+      });
+
+      return res.status(200).json({
+        status: 'ok',
+        count: dataColecciontar.length,
+        data: dataColecciontar
+      });
+    }
 
     // Configuramos las relaciones y los filtros
     const dataColecciontar = await repository.find({
@@ -86,7 +102,7 @@ const getColecciontar = async (req, res) => { // Asegúrate de usar 'req' (no '_
           usuario: user ? { id_usuarios: parseInt(user) } : {},
           // Filtramos por el tipo de juego
           tipo: type ? ILike(`${type}%`) : undefined
-        }
+        },
       }
     });
 
