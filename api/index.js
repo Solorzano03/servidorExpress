@@ -7,21 +7,13 @@ app.use(express.json());
 
 // Rutas
 app.get("/", (req, res) => {
-  res.send("hola mundo");
+  res.send("api-warp");
 });
 
 app.use("/auth", require("../routes/auth"));
 app.use("/user", require("../routes/users"));
 app.use("/cards", require("../routes/tarjetas"));
-try {
-  const juegos = require("../routes/juegos");
-  console.log("RUTA CARGADA OK");
-  app.use("/games", juegos);  
-} catch (err) {
-  console.error("ERROR AL CARGAR RUTA /games:", err);
-}
-
-app.use("/coleccion", require("../routes/coleccionusuarios"));
+app.use("/games", require("../routes/juegos"));  
 
 // Inicializar BD SOLO UNA VEZ
 let dbInitialized = false;

@@ -1,13 +1,14 @@
 const { AppDataSource } = require('../utils/datasource');
-const  tarjetas  = require('../Entity/tarjetas');
+const { ILike } = require('typeorm');
+const Tarjetas = require('../Entity/tarjetas');
 
-const repository = AppDataSource.getRepository(tarjetas);
+const repository = AppDataSource.getRepository(Tarjetas);
 
 const createtarjetas = async (req, res) => {
   try {
     const newtarjeta = await repository.create(req.body)
     const tarjet = await repository.save(newtarjeta)
-    
+
     return res.status(201).json({ status: 'ok', data: tarjet })
   } catch (error) {
     console.log(error)
@@ -21,13 +22,33 @@ const createtarjetas = async (req, res) => {
 
 }
 
-const getColecciontar = async (_req, res) => {
+const getColecciontar = async (req, res) => { // Asegúrate de usar 'req' (no '_req') si vas a usar req.query
   try {
-    const dataColecciontar = await repository.find();
+    const { user, type } = req.query;
     
-    return res.status(200).json({ status: 'ok', data: dataColecciontar });
+    // Configuramos las relaciones y los filtros
+    const dataColecciontar = await repository.find({
+      relations: {
+        juego: true // Cargamos la relación con el juego para poder filtrar
+      },
+      where: {
+        juego: {
+          // Filtramos por el ID del usuario dentro del objeto juego
+          usuario: user ? { id_usuarios: parseInt(user) } : {},
+          // Filtramos por el tipo de juego
+          tipo: type ? ILike(`${type}%`) : undefined
+        }
+      }
+    });
+
+    return res.status(200).json({ 
+      status: 'ok', 
+      count: dataColecciontar.length,
+      data: dataColecciontar 
+    });
+
   } catch (er) {
-    console.log(er);
+    console.error("Error en getColecciontar:", er);
     return res.status(500).json({
       status: 'fail',
       errors: {
@@ -61,7 +82,7 @@ const updateColecciontar = async (req, res) => {
   try {
     const saveColecciontar = repository.merge(data, req.body);
     const dataColecciontar = await repository.save(saveColecciontar);
-   
+
 
     return res.status(200).json({ status: 'ok', data: dataColecciontar });
   } catch (error) {
@@ -77,7 +98,7 @@ const updateColecciontar = async (req, res) => {
 
 const deletecolecciontar = async (req, res) => {
   try {
-    const data = await repository.delete({  id_tarjetas: parseInt(req.params.id) });
+    const data = await repository.delete({ id_tarjetas: parseInt(req.params.id) });
 
     if (data.affected === 1) return res.status(200).json({ message: 'La coleccion se elimino correctamente' });
 
