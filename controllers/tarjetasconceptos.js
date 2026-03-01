@@ -6,22 +6,67 @@ const repository = AppDataSource.getRepository(Tarjetas);
 
 const createtarjetas = async (req, res) => {
   try {
-    const { juego, ...data } = req.body;
-    const newtarjeta = await repository.create({ ...data, juego: { id_juegos: juego } })
-    const tarjet = await repository.save(newtarjeta)
+    const { juego, nombreTarjeta, descripcion, categoria, urlSrpite } = req.body;
 
-    return res.status(201).json({ status: 'ok', data: tarjet })
+    // 🔥 Buscar el juego con su usuario
+    const juegoExistente = await juegoRepository.findOne({
+      where: { id_juegos: juego },
+      relations: ['usuario']
+    });
+
+    if (!juegoExistente) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Juego no encontrado'
+      });
+    }
+
+    // 🔥 Verificar si ya existe la tarjeta para ese usuario
+    const tarjetaExistente = await repository.findOne({
+      where: {
+        nombreTarjeta,
+        juego: {
+          usuario: {
+            id_usuarios: juegoExistente.usuario.id_usuarios
+          }
+        }
+      },
+      relations: ['juego', 'juego.usuario']
+    });
+
+    if (tarjetaExistente) {
+      return res.status(200).json({
+        status: 'exists',
+        message: 'La tarjeta ya fue otorgada anteriormente'
+      });
+    }
+
+    // 🔥 Crear nueva tarjeta
+    const nuevaTarjeta = repository.create({
+      nombreTarjeta,
+      descripcion,
+      categoria,
+      urlSrpite,
+      juego: { id_juegos: juego }
+    });
+
+    const tarjet = await repository.save(nuevaTarjeta);
+
+    return res.status(201).json({
+      status: 'ok',
+      data: tarjet
+    });
+
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).json({
       status: 'fail',
       errors: {
         message: 'Ha ocurrido un error interno en el servidor'
       }
-    })
+    });
   }
-
-}
+};
 
 const getColecciontar = async (req, res) => { // Asegúrate de usar 'req' (no '_req') si vas a usar req.query
   try {
