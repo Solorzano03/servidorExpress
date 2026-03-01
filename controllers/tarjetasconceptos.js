@@ -6,7 +6,8 @@ const repository = AppDataSource.getRepository(Tarjetas);
 
 const createtarjetas = async (req, res) => {
   try {
-    const newtarjeta = await repository.create(req.body)
+    const {...data, juego } = req.body;
+    const newtarjeta = await repository.create({ ...data, juego: { id_juegos: juego } })
     const tarjet = await repository.save(newtarjeta)
 
     return res.status(201).json({ status: 'ok', data: tarjet })
