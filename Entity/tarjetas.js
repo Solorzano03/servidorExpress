@@ -12,7 +12,7 @@ module.exports = new EntitySchema({
     nombreTarjeta: { type: "varchar", length: 300 },
     descripcion: { type: "varchar", length: 300 },
     categoria: { type: "varchar", length: 100 },
-    urlSrpite: { type: "varchar", length: 255 },
+    urlSrpite: { type: "text" },
   },
   relations: {
     // NUEVA RELACIÓN: Muchas tarjetas pertenecen a un juego
