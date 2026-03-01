@@ -6,7 +6,7 @@ const repository = AppDataSource.getRepository(Tarjetas);
 
 const createtarjetas = async (req, res) => {
   try {
-    const {...data, juego } = req.body;
+    const { juego, ...data } = req.body;
     const newtarjeta = await repository.create({ ...data, juego: { id_juegos: juego } })
     const tarjet = await repository.save(newtarjeta)
 
@@ -26,7 +26,7 @@ const createtarjetas = async (req, res) => {
 const getColecciontar = async (req, res) => { // Asegúrate de usar 'req' (no '_req') si vas a usar req.query
   try {
     const { user, type } = req.query;
-    
+
     // Configuramos las relaciones y los filtros
     const dataColecciontar = await repository.find({
       relations: {
@@ -42,10 +42,10 @@ const getColecciontar = async (req, res) => { // Asegúrate de usar 'req' (no '_
       }
     });
 
-    return res.status(200).json({ 
-      status: 'ok', 
+    return res.status(200).json({
+      status: 'ok',
       count: dataColecciontar.length,
-      data: dataColecciontar 
+      data: dataColecciontar
     });
 
   } catch (er) {
