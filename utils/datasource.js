@@ -11,8 +11,6 @@ const AppDataSource = new DataSource({
   entities: [
     require('../Entity/users'),
     require('../Entity/juegos'),
-   
-    require('../Entity/coleccionusuarios'),
     require('../Entity/tarjetas'),
     ],
   //dropSchema: true, para eliminar esquema total cuando realice cambios en la api 
