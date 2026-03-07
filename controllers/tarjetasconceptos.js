@@ -10,6 +10,7 @@ const juegoRepository = AppDataSource.getRepository(Juegos);
 const createtarjetas = async (req, res) => {
   try {
     const { juego, nombreTarjeta, descripcion, categoria, urlSrpite } = req.body;
+    console.log("body", req.body)
 
     // 🔥 Buscar el juego con su usuario
     const juegoExistente = await juegoRepository.findOne({
