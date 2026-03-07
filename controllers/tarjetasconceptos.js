@@ -14,6 +14,7 @@ const createtarjetas = async (req, res) => {
     // 🔥 Buscar el juego con su usuario
     const juegoExistente = await juegoRepository.findOne({
       where: { id_juegos: juego },
+      categoria,      
       relations: ['usuario']
     });
 
@@ -28,6 +29,7 @@ const createtarjetas = async (req, res) => {
     const tarjetaExistente = await repository.findOne({
       where: {
         nombreTarjeta,
+        categoria,
         juego: {
           usuario: {
             id_usuarios: juegoExistente.usuario.id_usuarios
@@ -37,7 +39,6 @@ const createtarjetas = async (req, res) => {
       relations: ['juego', 'juego.usuario']
     });
 
-    console.log("Tarjeta", tarjetaExistente)
 
     if (tarjetaExistente) {
       return res.status(200).json({
