@@ -6,7 +6,7 @@ const repository = AppDataSource.getRepository(Juegos);
 
 const createjuego = async (req, res) => {
   try {
-    const { usuarioId, titulo, tipo, ...data } = req.body;
+    const { usuarioId, titulo, tipo, id_juegos, ...data } = req.body;
     console.log("Lo que se envía",req.body)
 
     // 1. Buscamos de forma más explícita
@@ -26,6 +26,7 @@ const createjuego = async (req, res) => {
       repository.merge(existing, data); // merge es más seguro que Object.assign en TypeORM
       const updatedGame = await repository.save(existing);
 
+      console.log("ACTUALIZO")
       return res.status(200).json({
         status: "ok",
         message: "Juego actualizado correctamente",
@@ -42,6 +43,7 @@ const createjuego = async (req, res) => {
 
       const savedGame = await repository.save(newGame);
 
+      console.log("CREADO")
       return res.status(201).json({
         status: "ok",
         message: "Juego creado correctamente",
