@@ -1,6 +1,6 @@
 const { AppDataSource } = require('../utils/datasource');
 const { ILike } = require('typeorm');
-const  Juegos = require ('../Entity/juegos')
+const Juegos = require('../Entity/juegos')
 
 const repository = AppDataSource.getRepository(Juegos);
 
@@ -8,29 +8,29 @@ const createjuego = async (req, res) => {
   try {
     const { usuarioId, titulo, tipo, ...data } = req.body;
 
-    const existing = await repository.findOne({
+    // 1. Buscamos de forma más explícita
+    let existing = await repository.findOne({
       where: {
         usuario: { id_usuarios: usuarioId },
         titulo: titulo,
         tipo: tipo
       },
-      relations: ["usuario"],
+      // Cargamos la relación para asegurar que el objeto esté completo
+      relations: ["usuario"]
     });
 
-    let game;
-
     if (existing) {
-      Object.assign(existing, data);
-      game = await repository.save(existing);
+      // 2. Actualizamos
+      repository.merge(existing, data); // merge es más seguro que Object.assign en TypeORM
+      const updatedGame = await repository.save(existing);
 
       return res.status(200).json({
         status: "ok",
         message: "Juego actualizado correctamente",
-        data: game,
+        data: updatedGame,
       });
-
     } else {
-      // --- No existe: creamos uno nuevo ---
+      // 3. Creamos
       const newGame = repository.create({
         usuario: { id_usuarios: usuarioId },
         titulo,
@@ -38,15 +38,18 @@ const createjuego = async (req, res) => {
         ...data,
       });
 
-      game = await repository.save(newGame);
+      const savedGame = await repository.save(newGame);
 
       return res.status(201).json({
         status: "ok",
         message: "Juego creado correctamente",
-        data: game,
+        data: savedGame,
       });
     }
   } catch (error) {
+    if (error.code === '23505' || error.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ status: "fail", message: "El juego ya está siendo procesado" });
+    }
     console.log(error);
     return res.status(500).json({
       status: "fail",
@@ -65,11 +68,11 @@ const getJuegos = async (req, res) => {
     }
 
     if (type) {
-      whereClause.tipo = ILike(`${type}%`); 
+      whereClause.tipo = ILike(`${type}%`);
     }
 
     if (search) {
-      whereClause.titulo = ILike(`%${search}%`); 
+      whereClause.titulo = ILike(`%${search}%`);
     }
 
     const games = await repository.find({ where: whereClause });
@@ -84,7 +87,7 @@ const getJuegos = async (req, res) => {
   }
 };
 
-const getjuego= async (req, res) => {
+const getjuego = async (req, res) => {
   try {
     const data = await repository.findOneBy({ id_juegos: parseInt(req.params.id) });
     if (data === null) return res.status(404).json({ message: 'No se pudo encontrar el estado' });
