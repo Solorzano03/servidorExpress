@@ -10,7 +10,6 @@ const juegoRepository = AppDataSource.getRepository(Juegos);
 const createtarjetas = async (req, res) => {
   try {
     const { juego, nombreTarjeta, descripcion, categoria, urlSrpite } = req.body;
-    console.log("body", req.body)
 
     // 🔥 Buscar el juego con su usuario
     const juegoExistente = await juegoRepository.findOne({
@@ -40,7 +39,6 @@ const createtarjetas = async (req, res) => {
       relations: ['juego', 'juego.usuario']
     });
 
-console.log("Existe", tarjetaExistente)
     if (tarjetaExistente) {
       return res.status(200).json({
         status: 'exists',
@@ -58,7 +56,6 @@ console.log("Existe", tarjetaExistente)
     });
 
     const tarjet = await repository.save(nuevaTarjeta);
-console.log("Guarda", tarjet)
     return res.status(201).json({
       status: 'ok',
       data: tarjet
@@ -109,8 +106,6 @@ const getColecciontar = async (req, res) => { // Asegúrate de usar 'req' (no '_
         },
       }
     });
-
-    console.log(dataColecciontar)
 
     return res.status(200).json({
       status: 'ok',

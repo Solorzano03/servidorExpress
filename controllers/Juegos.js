@@ -6,21 +6,30 @@ const repository = AppDataSource.getRepository(Juegos);
 
 const createjuego = async (req, res) => {
   try {
-    const { usuarioId, titulo, tipo, id_juegos, ...data } = req.body;
+    const { usuarioId, titulo, tipo, id_juegos, puntaje, ...data } = req.body;
 
-    // 1. Buscamos de forma más explícita
     let existing = await repository.findOne({
       where: {
         usuario: { id_usuarios: usuarioId },
         tipo: tipo.trim()
       },
-      // Cargamos la relación para asegurar que el objeto esté completo
       relations: ["usuario"]
     });
 
     if (existing) {
-      // 2. Actualizamos
-      repository.merge(existing, data); // merge es más seguro que Object.assign en TypeORM
+
+      // 🚨 Verificamos si el nuevo puntaje es mayor
+      if (puntaje <= existing.puntaje) {
+        return res.status(200).json({
+          status: "ok",
+          message: "El puntaje no supera al existente, no se actualiza",
+          data: existing
+        });
+      }
+
+      // ✅ Solo si el puntaje es mayor se actualiza
+      repository.merge(existing, { puntaje, ...data });
+
       const updatedGame = await repository.save(existing);
 
       return res.status(200).json({
@@ -28,12 +37,14 @@ const createjuego = async (req, res) => {
         message: "Juego actualizado correctamente",
         data: updatedGame,
       });
+
     } else {
-      // 3. Creamos
+
       const newGame = repository.create({
         usuario: { id_usuarios: usuarioId },
         titulo: titulo.trim(),
         tipo: tipo.trim(),
+        puntaje,
         ...data,
       });
 
@@ -45,11 +56,14 @@ const createjuego = async (req, res) => {
         data: savedGame,
       });
     }
+
   } catch (error) {
     if (error.code === '23505' || error.code === 'ER_DUP_ENTRY') {
       return res.status(409).json({ status: "fail", message: "El juego ya está siendo procesado" });
     }
+
     console.log(error);
+
     return res.status(500).json({
       status: "fail",
       errors: { message: "Ha ocurrido un error interno en el servidor" }

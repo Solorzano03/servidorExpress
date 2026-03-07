@@ -25,7 +25,6 @@ async function initDB() {
   if (dbInitialized) return;
   try {
     await DataSource.AppDataSource.initialize();
-    console.log("Base de datos conectada");
     dbInitialized = true;
   } catch (err) {
     console.error("Error al conectar BD:", err);
