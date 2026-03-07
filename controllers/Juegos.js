@@ -7,17 +7,19 @@ const repository = AppDataSource.getRepository(Juegos);
 const createjuego = async (req, res) => {
   try {
     const { usuarioId, titulo, tipo, ...data } = req.body;
+    console.log("Lo que se envía",req.body)
 
     // 1. Buscamos de forma más explícita
     let existing = await repository.findOne({
       where: {
         usuario: { id_usuarios: usuarioId },
-        titulo: titulo.trim(),
         tipo: tipo.trim()
       },
       // Cargamos la relación para asegurar que el objeto esté completo
       relations: ["usuario"]
     });
+
+    console.log("Lo que es la consulta", existing)
 
     if (existing) {
       // 2. Actualizamos
