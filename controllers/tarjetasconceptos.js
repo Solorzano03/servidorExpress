@@ -37,6 +37,8 @@ const createtarjetas = async (req, res) => {
       relations: ['juego', 'juego.usuario']
     });
 
+    console.log("Tarjeta", tarjetaExistente)
+
     if (tarjetaExistente) {
       return res.status(200).json({
         status: 'exists',
@@ -106,7 +108,7 @@ const getColecciontar = async (req, res) => { // Asegúrate de usar 'req' (no '_
       }
     });
 
-    console.log(data)
+    console.log(dataColecciontar)
 
     return res.status(200).json({
       status: 'ok',
