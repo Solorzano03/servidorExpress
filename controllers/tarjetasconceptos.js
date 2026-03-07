@@ -39,7 +39,7 @@ const createtarjetas = async (req, res) => {
       relations: ['juego', 'juego.usuario']
     });
 
-
+console.log("Existe", tarjetaExistente)
     if (tarjetaExistente) {
       return res.status(200).json({
         status: 'exists',
@@ -57,7 +57,7 @@ const createtarjetas = async (req, res) => {
     });
 
     const tarjet = await repository.save(nuevaTarjeta);
-
+console.log("Guarda", tarjet)
     return res.status(201).json({
       status: 'ok',
       data: tarjet
