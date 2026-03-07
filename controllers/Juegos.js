@@ -12,8 +12,8 @@ const createjuego = async (req, res) => {
     let existing = await repository.findOne({
       where: {
         usuario: { id_usuarios: usuarioId },
-        titulo: titulo,
-        tipo: tipo
+        titulo: titulo.trim(),
+        tipo: tipo.trim()
       },
       // Cargamos la relación para asegurar que el objeto esté completo
       relations: ["usuario"]
@@ -33,8 +33,8 @@ const createjuego = async (req, res) => {
       // 3. Creamos
       const newGame = repository.create({
         usuario: { id_usuarios: usuarioId },
-        titulo,
-        tipo,
+        titulo: titulo.trim(),
+        tipo: tipo.trim(),
         ...data,
       });
 
